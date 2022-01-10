@@ -1,5 +1,5 @@
 def checkBatches(df,batch_size=128,weight_column='weight'):
-    N_checks = 1000
+    N_checks = 100
     sum_sig = 0.
     N_sig = 0
     sum_back = 0.
