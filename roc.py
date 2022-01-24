@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.collections import LineCollection
 from sklearn import metrics 
+import itertools
 
-def rocAndSig(y_true,y_pred,w_roc=None,w_sig=None,outputName=None,colormap='gist_rainbow'):
+def rocAndSig(y_true,y_pred,w_roc=None,w_sig=None,outputName=None,show_significance=True,colormap='gist_rainbow'):
     """
         y_true      : Numpy array of target labels (0s and 1s)
         y_pred      : Numpy array of the DNN predictions
@@ -34,17 +35,6 @@ def rocAndSig(y_true,y_pred,w_roc=None,w_sig=None,outputName=None,colormap='gist
             z[i] = np.sqrt(2*((s+b)*np.log(1+s/b)-s))
     # Significance of counting experiment with known b : arXiv:1007.1727v3
         
-#    if w_sig is None:
-#        N_s = y_true[y_true==1].shape[0]
-#        N_b = y_true[y_true==0].shape[0]
-#    else:
-#        N_s = w_sig[y_true==1].sum()
-#        N_b = w_sig[y_true==0].sum()
-#        N_s *= N_b*0.001/N_s
-#    s = tpr * N_s
-#    b = fpr * N_b
-#    z = np.nan_to_num(np.sqrt(2*((s+b)*np.log(1+s/b)-s)))
-    
     # Make figure #
     fig,(ax,cax) = plt.subplots(ncols=2,figsize=(9,6),gridspec_kw={"width_ratios":[1, 0.05]})
     fig.subplots_adjust(left=0.1, right=0.9, top=0.98, bottom=0.1, wspace=0.3)
@@ -79,11 +69,12 @@ def rocAndSig(y_true,y_pred,w_roc=None,w_sig=None,outputName=None,colormap='gist
     cbar.set_label('DNN score',fontsize=18)
 
     # Add significance as second y axis 
-    ax2=ax.twinx()
-    ax2.plot(sig_fpr,z)
-    ax2.set_yscale("log")
-    #ax2.set_ylim([0,z.max()*1.1])
-    ax2.set_ylabel('Significance',fontsize=18)
+    if show_significance:
+        ax2=ax.twinx()
+        ax2.plot(sig_fpr,z)
+        ax2.set_yscale("log")
+        #ax2.set_ylim([0,z.max()*1.1])
+        ax2.set_ylabel('Significance',fontsize=18)
 
     # Save and show #
     plt.show()
@@ -91,8 +82,40 @@ def rocAndSig(y_true,y_pred,w_roc=None,w_sig=None,outputName=None,colormap='gist
         fig.savefig(outputName)
         print (f'Saved ROC as {outputName}')
         
-    print (f'Best WP based on significance = {sig_thresh[z.argmax()]:6.5f}')
+    if show_significance:
+        print (f'Best WP based on significance = {sig_thresh[z.argmax()]:6.5f}')
 
+def multiRoc(outputs,tags,weights,outputName=None,title=None):
+    assert len(outputs) == len(tags)
+    assert len(outputs) == len(weights)
+        
+    fig,ax = plt.subplots(figsize=(6,6))
+    permutations = list(itertools.combinations(list(range(len(outputs))),2))
+    colors = [cm.rainbow(x) for x in np.linspace(0, 1, len(permutations))]
+    for i,(pa,pb) in enumerate(permutations):
+        output = np.concatenate([outputs[pa],outputs[pb]],axis=0)
+        weight = np.concatenate([weights[pa],weights[pb]],axis=0)
+        tag_a = tags[pa]
+        tag_b = tags[pb]
+        target = np.concatenate([np.ones(outputs[pa].shape[0]),np.zeros(outputs[pb].shape[0])],axis=0)
+        fpr, tpr, threshold = metrics.roc_curve(target, output, sample_weight=weight,drop_intermediate=True)
+        ax.plot(fpr,tpr,color=colors[i],label=f'P({tag_a}) versus P({tag_b})')
+    ax.plot([0, 1], [0, 1], 'k--')
+    ax.legend(loc='upper left')
+    ax.set_xlabel('Contamination')
+    ax.set_ylabel('Selection efficiency')
+    ax.set_title(title)
+                                 
+    # Save and show #
+    plt.show()
+    if outputName is not None:
+        fig.savefig(outputName)
+        print (f'Saved multi ROC as {outputName}')                            
+                                 
+                                 
+                             
+                        
+    
 if __name__ == '__main__':
     # Just a test to check the setup #
     # Use 1000 signal events and 10000 background events
