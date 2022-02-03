@@ -14,3 +14,9 @@ Give a port number of your choice (one that you know is not being used at that m
  (`ingrid1-gwceci` is the name in my ssh config to connect to ingrid.)
  
  What I run, for example, is `sh -NL 1234:localhost:1234 -i .ssh/id_rsa.ceci ingrid1-gwceci`
+
+Once you trained your model and saved it with tensorflow, use [tf2onnx](https://github.com/onnx/tensorflow-onnx) python package.
+
+To install: `pip install -U tf2onnx`
+
+Once installed : `python -m tf2onnx.convert --saved-model tensorflow-model-path --output model.onnx` will convert your tf model to onnx.
