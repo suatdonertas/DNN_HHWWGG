@@ -12,3 +12,5 @@ on the cluster, jupyter notebook --no-browser --port port_number
 Give a port number of your choice (one that you know is not being used at that moment); 1234, 1235 etc.
 
  (`ingrid1-gwceci` is the name in my ssh config to connect to ingrid.)
+ 
+ What I run, for example, is `sh -NL 1234:localhost:1234 -i .ssh/id_rsa.ceci ingrid1-gwceci`
