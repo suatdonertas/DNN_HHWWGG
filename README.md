@@ -15,7 +15,7 @@ Give a port number of your choice (one that you know is not being used at that m
  
  What I run, for example, is `sh -NL 1234:localhost:1234 -i .ssh/id_rsa.ceci ingrid1-gwceci`
 
-Once you trained your model and saved it with tensorflow, use [tf2onnx](https://github.com/onnx/tensorflow-onnx) python package.
+Once you trained your model and saved it with tensorflow, use [tf2onnx](https://github.com/onnx/tensorflow-onnx).
 
 To install: `pip install -U tf2onnx`
 
