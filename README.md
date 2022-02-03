@@ -11,4 +11,4 @@ on the cluster, jupyter notebook --no-browser --port port_number
 
 Give a port number of your choice (one that you know is not being used at that moment); 1234, 1235 etc.
 
-`ingrid`-gwceci` can/should be replaced with whatever you 
+ (`ingrid1-gwceci` is the name in my config to connect to ingrid.)
