@@ -83,4 +83,3 @@ def PlotHistory(history,params,outputName):
     # Save #
     fig.savefig(outputName)
     print('Curves saved as %s'%outputName)
-
