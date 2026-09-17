@@ -1,16 +1,16 @@
 # DNN_HHWWGG — Deep Learning for Di-Higgs Boson Search
 
 Deep neural network pipeline built during my PhD research at CERN, used to search for
-di-Higgs production (HH → WWγγ) in CMS collision data — one of the rarest and most
+di-Higgs production (HH → WWγγ) in CMS collision data, one of the rarest and most
 sought-after processes in particle physics, since finding it would directly probe how
 the Higgs boson interacts with itself.
 
 ## The problem, in plain terms
 
 Out of trillions of particle collisions, only a tiny handful could contain the signal
-we're looking for — the rest is background noise that looks deceptively similar. This
+we're looking for while the rest is background noise that looks deceptively similar. This
 project trains classifiers to separate genuine signal events from background, and then
-quantifies *how statistically confident* we can be in that separation — not just "is
+quantifies *how statistically confident* we can be in that separation, not just "is
 this classifier accurate," but "if we saw this many signal-like events, could we claim
 a real discovery?"
 
